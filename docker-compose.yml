@@ -1,0 +1,77 @@
+name: carteira-digital
+
+# Sobe tudo com apenas:
+#   docker compose down -v
+#   docker compose up --build -d
+#
+# O serviço `api` expõe a aplicação e o front-end em http://localhost:8080.
+# As variáveis abaixo têm valores padrão de desenvolvimento; para trocar,
+# copie .env.example para .env e edite.
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: carteira-db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${DB_NAME:-carteira}
+      MYSQL_USER: ${DB_USER:-carteira}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-carteira123}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-root123}
+      TZ: UTC
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_0900_ai_ci
+      - --default-time-zone=+00:00
+    volumes:
+      # Volume nomeado: os dados sobrevivem a `docker compose down` e a
+      # reinicializações. Apenas `down -v` apaga (começo limpo).
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -u root -p\"$$MYSQL_ROOT_PASSWORD\" --silent"]
+      interval: 5s
+      timeout: 5s
+      retries: 40
+      start_period: 40s
+    networks:
+      - carteira
+
+  api:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: carteira-api
+    restart: unless-stopped
+    environment:
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_NAME: ${DB_NAME:-carteira}
+      DB_USER: ${DB_USER:-carteira}
+      DB_PASSWORD: ${DB_PASSWORD:-carteira123}
+      JWT_SECRET: ${JWT_SECRET:-chave-de-desenvolvimento-troque-em-producao-000000}
+      JWT_ALGORITHM: HS256
+      ACCESS_TOKEN_EXPIRE_MINUTES: ${ACCESS_TOKEN_EXPIRE_MINUTES:-60}
+      SALDO_INICIAL: ${SALDO_INICIAL:-1000}
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:8080,http://127.0.0.1:8080}
+      FRONTEND_DIR: /app/frontend
+      TZ: UTC
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:8080/health || exit 1"]
+      interval: 15s
+      timeout: 5s
+      start_period: 30s
+      retries: 5
+    networks:
+      - carteira
+
+networks:
+  carteira:
+    driver: bridge
+
+volumes:
+  mysql-data:

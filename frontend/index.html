@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Carteira Digital — login seguro com JWT e bcrypt." />
+  <meta name="theme-color" content="#05060b" />
+  <title>Entrar · Carteira Digital</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body class="auth-page">
+  <!-- Fundo decorativo -->
+  <div class="bg-decor" aria-hidden="true">
+    <span class="orb orb--1"></span>
+    <span class="orb orb--2"></span>
+  </div>
+
+  <main class="auth-shell">
+    <!-- Painel de apresentação -->
+    <section class="auth-intro">
+      <div class="auth-intro__content">
+        <div class="brand" style="margin-bottom: 28px;">
+          <span class="brand__mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 3l7 3v5c0 4.5-3 8.4-7 10-4-1.6-7-5.5-7-10V6l7-3z" />
+              <path d="M9.5 12l1.8 1.8 3.4-3.6" />
+            </svg>
+          </span>
+          <span class="brand__name">
+            Carteira Digital
+            <small>Autenticação e Segurança</small>
+          </span>
+        </div>
+
+        <span class="eyebrow"><span class="dot"></span> Ambiente protegido</span>
+
+        <h1>Sua conta, protegida <span>de ponta a ponta</span>.</h1>
+        <p class="lead">
+          Entre com seu nome de usuário e senha. Cada sessão é autenticada por
+          token JWT e sua senha é guardada apenas como hash bcrypt.
+        </p>
+
+        <ul class="auth-features">
+          <li class="auth-feature">
+            <span class="auth-feature__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="4" y="10" width="16" height="10" rx="2" />
+                <path d="M8 10V7a4 4 0 018 0v3" />
+              </svg>
+            </span>
+            <div>
+              <strong>Senhas com bcrypt</strong>
+              <span>Nenhuma senha é armazenada em texto puro.</span>
+            </div>
+          </li>
+          <li class="auth-feature">
+            <span class="auth-feature__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z" />
+              </svg>
+            </span>
+            <div>
+              <strong>Sessões com JWT</strong>
+              <span>Tokens assinados, com validade e validação em cada rota.</span>
+            </div>
+          </li>
+          <li class="auth-feature">
+            <span class="auth-feature__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <ellipse cx="12" cy="5" rx="7" ry="3" />
+                <path d="M5 5v6c0 1.7 3.1 3 7 3s7-1.3 7-3V5" />
+                <path d="M5 11v6c0 1.7 3.1 3 7 3s7-1.3 7-3v-6" />
+              </svg>
+            </span>
+            <div>
+              <strong>Dados no MySQL</strong>
+              <span>Persistência real, sem dados falsos ou simulações.</span>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <p class="auth-intro__footer">
+        Projeto acadêmico · Transferências · FastAPI + MySQL + Docker
+      </p>
+    </section>
+
+    <!-- Formulário de login -->
+    <section class="auth-card">
+      <header class="auth-card__head">
+        <span class="badge badge--purple">Área segura</span>
+        <h2>Entrar na conta</h2>
+        <p>Use o nome de usuário e a senha cadastrados.</p>
+      </header>
+
+      <form id="form-login" class="form" novalidate autocomplete="on">
+        <div class="field">
+          <label for="username">Usuário</label>
+          <div class="input-wrap">
+            <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M20 21a8 8 0 10-16 0" />
+              <circle cx="12" cy="7" r="4" />
+            </svg>
+            <input
+              id="username"
+              name="username"
+              type="text"
+              placeholder="seu_usuario"
+              autocomplete="username"
+              autocapitalize="none"
+              spellcheck="false"
+              minlength="3"
+              maxlength="32"
+              required
+            />
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="senha">Senha</label>
+          <div class="input-wrap">
+            <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="4" y="10" width="16" height="10" rx="2" />
+              <path d="M8 10V7a4 4 0 018 0v3" />
+            </svg>
+            <input
+              id="senha"
+              name="senha"
+              type="password"
+              placeholder="••••••••"
+              autocomplete="current-password"
+              minlength="6"
+              maxlength="72"
+              required
+            />
+            <button type="button" class="reveal" data-reveal="senha" aria-label="Mostrar senha" aria-pressed="false">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z" />
+                <circle cx="12" cy="12" r="3" />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div id="login-error" class="form-error" role="alert" hidden></div>
+
+        <button type="submit" class="btn btn--primary btn--block" id="btn-login">
+          <span class="btn__label">Entrar</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M5 12h14M13 6l6 6-6 6" />
+          </svg>
+        </button>
+      </form>
+
+      <p class="auth-switch">
+        Ainda não tem conta? <a href="cadastro.html">Cadastre-se</a>
+      </p>
+      <p class="hint">
+        Toda conta nova começa com <strong>1.000 moedas</strong>. O acesso é liberado
+        somente com credenciais válidas.
+      </p>
+    </section>
+  </main>
+
+  <div class="toast-area" id="toast-area" aria-live="polite"></div>
+
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/login.js"></script>
+</body>
+</html>

@@ -1,0 +1,19 @@
+# Dependências do backend
+fastapi>=0.115,<1.0
+uvicorn[standard]>=0.30,<1.0
+
+# Banco de dados MySQL
+SQLAlchemy>=2.0,<3.0
+PyMySQL>=1.1,<2.0
+cryptography>=42.0
+
+# Autenticação
+PyJWT>=2.8,<3.0
+bcrypt>=4.1,<6.0
+
+# Configuração via variáveis de ambiente
+pydantic-settings>=2.2,<3.0
+
+# Testes automatizados (usados por `pytest tests`)
+pytest>=8.0,<9.0
+httpx>=0.27,<1.0
